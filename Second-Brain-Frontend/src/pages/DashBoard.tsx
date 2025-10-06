@@ -18,7 +18,7 @@ interface Content {
 export function DashBoard() {
   const [modelOpen, setModelOpen] = useState(false);
   const [filterType, setFilterType] = useState<string | null>(null);
-  const { contents, refresh } = useContent<Content>();
+  const { contents, refresh } = useContent(); // removed generic
 
   useEffect(() => {
     refresh();
@@ -47,11 +47,7 @@ export function DashBoard() {
               const response = await axios.post(
                 BACKEND_URL + "/api/v1/brain/share",
                 { share: true },
-                {
-                  headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                  },
-                }
+                { headers: { Authorization: localStorage.getItem("token") || "" } }
               );
               const shareUrl = `${import.meta.env.VITE_BASE_URL ?? "http://localhost:5173"}/share/${response.data.hash}`;
               alert(shareUrl);

@@ -5,10 +5,7 @@ import { Input } from "./Input";
 import { useRef, useState } from "react";
 import { BACKEND_URL } from "../config";
 
-export enum ContentType {
-  Youtube = "youtube",
-  Twitter = "twitter",
-}
+export type ContentType = "youtube" | "twitter";
 
 interface CreateContentModalProps {
   open: boolean;
@@ -18,7 +15,7 @@ interface CreateContentModalProps {
 export function CreateContentModel({ open, onClose }: CreateContentModalProps) {
   const titleRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLInputElement>(null);
-  const [type, setType] = useState<ContentType>(ContentType.Youtube);
+  const [type, setType] = useState<ContentType>("youtube");
 
   async function addContent() {
     const title = titleRef.current?.value;
@@ -28,17 +25,10 @@ export function CreateContentModel({ open, onClose }: CreateContentModalProps) {
 
     await axios.post(
       BACKEND_URL + "/api/v1/content",
-      {
-        title,
-        link,
-        type,
-      },
-      {
-        headers: {
-          Authorization: localStorage.getItem("token") || "",
-        },
-      }
+      { title, link, type },
+      { headers: { Authorization: localStorage.getItem("token") || "" } }
     );
+
     onClose();
   }
 
@@ -66,13 +56,13 @@ export function CreateContentModel({ open, onClose }: CreateContentModalProps) {
             <div className="flex gap-2">
               <Button
                 text="Youtube"
-                varient={type === ContentType.Youtube ? "primary" : "secondary"}
-                onClick={() => setType(ContentType.Youtube)}
+                varient={type === "youtube" ? "primary" : "secondary"}
+                onClick={() => setType("youtube")}
               />
               <Button
                 text="Twitter"
-                varient={type === ContentType.Twitter ? "primary" : "secondary"}
-                onClick={() => setType(ContentType.Twitter)}
+                varient={type === "twitter" ? "primary" : "secondary"}
+                onClick={() => setType("twitter")}
               />
             </div>
           </div>
@@ -85,4 +75,5 @@ export function CreateContentModel({ open, onClose }: CreateContentModalProps) {
     </div>
   );
 }
+
 
